@@ -16,21 +16,23 @@ public class SecurityServicesApplication {
     public static void main(String[] args) {
         SpringApplication.run(SecurityServicesApplication.class, args);
     }
-@Bean
-    CommandLineRunner start(AccountService accountService){
-      return  args -> {
-        accountService.save(new AppRole(null,"USER"));
-        accountService.save(new AppRole(null,"ADMIN"));
-          Stream.of("user1","user2","user3","admin").forEach(un->{
-              accountService.saveUser(un,"1234","1234");
-          });
-          accountService.addRoleToUser("admin","ADMIN");
 
-
-      };
-    }
     @Bean
-    BCryptPasswordEncoder getBCPE(){
+    CommandLineRunner start(AccountService accountService) {
+        return args -> {
+            accountService.save(new AppRole(null, "USER"));
+            accountService.save(new AppRole(null, "ADMIN"));
+            Stream.of("user1", "user2", "user3", "admin").forEach(un -> {
+                accountService.saveUser(un, "1234", "1234");
+            });
+            accountService.addRoleToUser("admin", "ADMIN");
+
+
+        };
+    }
+
+    @Bean
+    BCryptPasswordEncoder getBCPE() {
         return new BCryptPasswordEncoder();
     }
 }

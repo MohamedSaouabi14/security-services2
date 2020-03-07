@@ -11,10 +11,11 @@ import javax.transaction.Transactional;
 
 @Service
 @Transactional
-public class AccountServiceImpl implements  AccountService {
+public class AccountServiceImpl implements AccountService {
     private AppUserRepository appUserRepository;
     private AppRoleRepository appRoleRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     public AccountServiceImpl(AppUserRepository appUserRepository, AppRoleRepository appRoleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.appUserRepository = appUserRepository;
         this.appRoleRepository = appRoleRepository;
@@ -23,15 +24,15 @@ public class AccountServiceImpl implements  AccountService {
 
     @Override
     public AppUser saveUser(String username, String password, String confirmedpassword) {
-        AppUser user=appUserRepository.findByUsername(username);
-        if (user!=null)throw new RuntimeException("User already exists");
-        if(!password.equals(confirmedpassword)) throw new RuntimeException("Please confirm your password");
-        AppUser appUser=new AppUser();
+        AppUser user = appUserRepository.findByUsername(username);
+        if (user != null) throw new RuntimeException("User already exists");
+        if (!password.equals(confirmedpassword)) throw new RuntimeException("Please confirm your password");
+        AppUser appUser = new AppUser();
         appUser.setUsername(username);
         appUser.setActived(true);
         appUser.setPassword(bCryptPasswordEncoder.encode(password));
         appUserRepository.save(appUser);
-        addRoleToUser(username,"USER");
+        addRoleToUser(username, "USER");
         return appUser;
     }
 
@@ -48,9 +49,9 @@ public class AccountServiceImpl implements  AccountService {
 
     @Override
     public AppRole addRoleToUser(String username, String rolename) {
-       AppUser appUser=appUserRepository.findByUsername(username);
-       AppRole appRole=appRoleRepository.findByRoleName(rolename);
-       appUser.getRoles().add(appRole);
+        AppUser appUser = appUserRepository.findByUsername(username);
+        AppRole appRole = appRoleRepository.findByRoleName(rolename);
+        appUser.getRoles().add(appRole);
         return appRole;
     }
 }
